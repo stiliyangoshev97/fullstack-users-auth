@@ -71,6 +71,9 @@ const userSchema = new Schema<UserDocument>({
     }
 })
 
+// Performance indexes
+// Note: 'name' and 'email' indexes are defined in field definitions above
+userSchema.index({ createdAt: -1 }); // Optimize sorting/pagination by registration date (newest first)
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
