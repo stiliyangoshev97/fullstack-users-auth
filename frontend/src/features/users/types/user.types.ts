@@ -36,3 +36,25 @@ export interface UserQueryParams {
   sortOrder?: 'asc' | 'desc';
   search?: string;
 }
+
+/**
+ * Pagination metadata
+ */
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+/**
+ * Paginated users response
+ */
+export interface PaginatedUsersResponse {
+  success: boolean;
+  message: string;
+  data: IUser[];
+  pagination: PaginationMeta;
+}

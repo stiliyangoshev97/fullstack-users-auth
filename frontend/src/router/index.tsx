@@ -7,7 +7,7 @@
 
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { LoginPage, RegisterPage } from '../features/auth/pages';
-import { DashboardPage, ProfilePage } from '../features/users/pages';
+import { DashboardPage, ProfilePage, UsersPage } from '../features/users/pages';
 import ProtectedRoute from './ProtectedRoute';
 
 export const router = createBrowserRouter([
@@ -36,6 +36,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ProfilePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/users',
+    element: (
+      <ProtectedRoute>
+        <UsersPage />
       </ProtectedRoute>
     ),
   },

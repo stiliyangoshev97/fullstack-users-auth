@@ -7,7 +7,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../../auth/store';
 import * as userApi from './userApi';
-import type { UpdateUserData } from '../types/user.types';
+import type { UpdateUserData, UserQueryParams } from '../types/user.types';
 
 /**
  * Get current user hook
@@ -18,6 +18,23 @@ export const useCurrentUser = () => {
     queryFn: userApi.getCurrentUser,
     // Only run if user is authenticated
     enabled: !!useAuthStore.getState().token,
+  });
+};
+
+/**
+ * Get all users with pagination hook
+ */
+export const useGetUsers = (params: UserQueryParams = {}) => {
+  return useQuery({
+    queryKey: ['users', params],
+    queryFn: () => userApi.getUsers(params),
+    // Keep previous data while fetching new page (only if successful)
+    placeholderData: (previousData, previousQuery) => {
+      // Only use placeholder if the previous query was successful
+      return previousQuery?.state.status === 'success' ? previousData : undefined;
+    },
+    staleTime: 5000, // Consider data fresh for 5 seconds
+    retry: 1, // Retry once on failure
   });
 };
 

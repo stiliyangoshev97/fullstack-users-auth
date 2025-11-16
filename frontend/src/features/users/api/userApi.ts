@@ -6,7 +6,7 @@
  */
 
 import { apiClient } from '../../../shared/api';
-import type { IUser, UpdateUserData } from '../types/user.types';
+import type { IUser, UpdateUserData, UserQueryParams, PaginatedUsersResponse } from '../types/user.types';
 import type { ApiResponse } from '../../../shared/types';
 
 /**
@@ -15,6 +15,26 @@ import type { ApiResponse } from '../../../shared/types';
 export const getCurrentUser = async (): Promise<IUser> => {
   const response = await apiClient.get<ApiResponse<IUser>>('/api/auth/me');
   return response.data.data;
+};
+
+/**
+ * Get all users with pagination
+ */
+export const getUsers = async (params: UserQueryParams = {}): Promise<PaginatedUsersResponse> => {
+  const queryParams = new URLSearchParams();
+  
+  if (params.page) queryParams.append('page', params.page.toString());
+  if (params.limit) queryParams.append('limit', params.limit.toString());
+  if (params.age) queryParams.append('age', params.age.toString());
+  if (params.sortBy) queryParams.append('sortBy', params.sortBy);
+  if (params.sortOrder) queryParams.append('sortOrder', params.sortOrder);
+  if (params.search) queryParams.append('search', params.search);
+  
+  const queryString = queryParams.toString();
+  const url = `/api/users${queryString ? `?${queryString}` : ''}`;
+  
+  const response = await apiClient.get<PaginatedUsersResponse>(url);
+  return response.data;
 };
 
 /**

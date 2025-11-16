@@ -4,6 +4,7 @@
  * Main dashboard page after login (protected route)
  */
 
+import { Link } from 'react-router-dom';
 import { useAuthStore } from '../../auth/store';
 import { useLogout } from '../../auth/api';
 import { Button, Container } from '../../../shared/components/ui';
@@ -35,22 +36,17 @@ const DashboardPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold mb-2">User Management</h3>
-            <p className="text-gray-600 mb-4">View and manage all users in the system</p>
-            <Button variant="primary">Coming Soon</Button>
-          </div>
+          <Link to="/users" className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+            <h3 className="text-lg font-semibold mb-2">All Users</h3>
+            <p className="text-gray-600 mb-4">View all registered users in the system</p>
+            <Button variant="primary">View Users →</Button>
+          </Link>
 
-          <div className="bg-white p-6 rounded-lg shadow">
+          <Link to="/profile" className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
             <h3 className="text-lg font-semibold mb-2">Profile Settings</h3>
             <p className="text-gray-600 mb-4">Update your profile information and password</p>
-            <Button 
-              variant="primary"
-              onClick={() => window.location.href = '/profile'}
-            >
-              Go to Profile
-            </Button>
-          </div>
+            <Button variant="primary">Go to Profile →</Button>
+          </Link>
         </div>
       </Container>
     </div>

@@ -92,13 +92,15 @@ export const getUsersSchema = z.object({
       page: z.string()
         .regex(/^\d+$/, 'Page must be a positive number')
         .transform(Number)
-        .refine(num => num >= 1, 'Page must be at least 1')
+        .refine((num: number) => num >= 1, 'Page must be at least 1')
+        .optional()
         .default(1), // Default to page 1
       
       limit: z.string() // Limit as string
         .regex(/^\d+$/, 'Limit must be a positive number')
         .transform(Number)
-        .refine(num => num >= 1 && num <= 100, 'Limit must be between 1 and 100') // .refine is used to add custom validation
+        .refine((num: number) => num >= 1 && num <= 100, 'Limit must be between 1 and 100') // .refine is used to add custom validation
+        .optional()
         .default(10), // Default to 10 items per page
       
       // Filtering

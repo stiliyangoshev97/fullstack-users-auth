@@ -94,7 +94,8 @@ export const validate = (schemas: ValidationSchemas) => {
       // Validate query parameters
       if (schemas.query) {
         const validatedQuery = schemas.query.parse(req.query);
-        // Note: req.query is read-only, so we validate but don't reassign
+        // Store validated query in a custom property since req.query is read-only
+        (req as any).validatedQuery = validatedQuery;
       }
 
       // Validate headers

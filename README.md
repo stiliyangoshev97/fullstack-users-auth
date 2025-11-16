@@ -13,6 +13,7 @@ A production-ready full-stack TypeScript MERN application featuring JWT authenti
 ### 🔐 Authentication
 - User registration with validation
 - Login/Logout with JWT tokens
+- Clear error messages for invalid credentials
 - Protected routes and API endpoints
 - Persistent sessions with localStorage
 - Token expiration handling
@@ -22,6 +23,21 @@ A production-ready full-stack TypeScript MERN application featuring JWT authenti
 - Update name and age
 - Change password with verification
 - Delete account functionality
+- Browse all users in paginated list
+- Filter users by age
+
+### 📋 Users List
+- Paginated display (9 users per page, 3x3 grid)
+- User cards with avatar, name, email, age, join date
+- Age filtering dropdown
+- Pagination controls with page numbers
+- Navigation menu across pages
+- Loading and error states
+
+### ⚡ Performance
+- MongoDB indexes on frequently queried fields
+- Optimized pagination with server-side queries
+- React Query caching for faster page loads
 
 ### 🛡️ Security
 - Bcrypt password hashing (12 rounds)

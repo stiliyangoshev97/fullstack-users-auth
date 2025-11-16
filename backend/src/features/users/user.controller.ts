@@ -113,7 +113,8 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
  * ```
  */
 export const getUsers = asyncHandler(async (req: Request, res: Response) => {
-  const queryParams: UserQueryParams = req.query as any;
+  // Use validatedQuery which contains Zod-transformed values (strings converted to numbers)
+  const queryParams: UserQueryParams = (req as any).validatedQuery || req.query;
 
   const result = await userService.getUsers(queryParams);
 
