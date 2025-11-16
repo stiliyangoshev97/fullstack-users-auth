@@ -1,0 +1,56 @@
+# TO-DO LIST
+
+## 🔴 HIGH PRIORITY
+
+---
+
+### 2. MongoDB Indexes Strategy
+**Issue**: Need to implement database indexes for better performance
+
+**Required Indexes**:
+- User model: `email` field (unique index already exists?)
+- User model: `createdAt` field (for sorting)
+- Consider compound indexes if needed
+
+**Files to Update**:
+- `backend/src/features/users/user.model.ts`
+
+**Actions**:
+1. Review current indexes in User model
+2. Add performance-critical indexes
+3. Configure MongoDB connection pooling
+4. Test query performance with indexes
+
+**Notes**:
+- Email index is critical for login queries
+- CreatedAt useful for pagination and sorting
+- Document any index decisions in PROJECT_CONTEXT.md
+
+---
+
+## ✅ COMPLETED
+
+- [x] Set up full-stack MERN TypeScript application
+- [x] Implement JWT authentication (login, register, logout)
+- [x] Create user profile management (edit, change password, delete)
+- [x] Set up Zustand store with localStorage persistence
+- [x] Implement React Query for server state
+- [x] Create reusable UI components (Button, Input, Container)
+- [x] Set up protected routes
+- [x] Add comprehensive documentation (README.md)
+- [x] Push to GitHub: https://github.com/stiliyangoshev97/fullstack-users-auth
+- [x] Remove HOW_TO_USE_PROJECT_CONTEXT.md from GitHub (keep local only)
+
+---
+
+## 📝 NOTES
+
+- Backend runs on: http://localhost:3000
+- Frontend runs on: http://localhost:5173
+- All API routes prefixed with `/api`
+- Project uses feature-based architecture
+- TypeScript strict mode enabled
+
+---
+
+**Last Updated**: November 15, 2025

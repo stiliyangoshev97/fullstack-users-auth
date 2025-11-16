@@ -145,17 +145,23 @@ export const registerUser = async (userData: RegisterUserData): Promise<AuthResp
  */
 export const loginUser = async (credentials: LoginCredentials): Promise<AuthResponse> => {
   try {
+    logger.info(`Login attempt for email: ${credentials.email}`);
+    
     // Find user by email (include password for comparison)
     const user = await User.findOne({ email: credentials.email }).select('+password');
     
     if (!user) {
-      throw new ApiError('Invalid login credentials', 401);
+      logger.warn(`Login failed: User not found with email: ${credentials.email}`);
+      // Generic message for security (don't reveal if email exists)
+      throw new ApiError('Invalid email or password. Please check your credentials and try again.', 401);
     }
 
     // Check password
     const isPasswordValid = await comparePassword(credentials.password, user.password);
     if (!isPasswordValid) {
-      throw new ApiError('Invalid login credentials', 401);
+      logger.warn(`Login failed: Invalid password for email: ${credentials.email}`);
+      // Generic message for security (don't reveal which field is wrong)
+      throw new ApiError('Invalid email or password. Please check your credentials and try again.', 401);
     }
 
     // Generate JWT token
@@ -176,7 +182,7 @@ export const loginUser = async (credentials: LoginCredentials): Promise<AuthResp
     if (error instanceof ApiError) throw error;
     
     logger.error(`Error during user login: ${error}`);
-    throw new ApiError('Login failed', 500);
+    throw new ApiError('An error occurred during login. Please try again later.', 500);
   }
 };
 

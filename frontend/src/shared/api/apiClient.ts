@@ -53,21 +53,28 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error: AxiosError<ApiErrorResponse>) => {
-    // Handle 401 Unauthorized - token expired or invalid
-    if (error.response?.status === 401) {
-      // Clear auth data
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('authUser');
-      
-      // Redirect to login (we'll handle this via Zustand store later)
-      window.location.href = '/login';
-    }
-    
     // Extract error message
     const errorMessage = 
       error.response?.data?.message || 
       error.message || 
       'An unexpected error occurred';
+    
+    // Handle 401 Unauthorized - but only redirect if user is already logged in
+    // Don't redirect on login/register failures
+    if (error.response?.status === 401) {
+      const isAuthEndpoint = error.config?.url?.includes('/auth/login') || 
+                             error.config?.url?.includes('/auth/register');
+      
+      // Only auto-logout if it's not a login/register attempt
+      if (!isAuthEndpoint) {
+        // Clear auth data
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('authUser');
+        
+        // Redirect to login for expired/invalid tokens
+        window.location.href = '/login';
+      }
+    }
     
     // Return a more user-friendly error
     return Promise.reject({

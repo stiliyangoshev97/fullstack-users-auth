@@ -33,6 +33,10 @@ export const useLogin = () => {
       // Redirect to dashboard
       navigate('/dashboard');
     },
+    onError: (error: any) => {
+      // Log error for debugging
+      console.error('Login error:', error);
+    },
   });
 };
 
@@ -51,6 +55,10 @@ export const useRegister = () => {
       setAuth(data.user, data.token);
       // Redirect to dashboard
       navigate('/dashboard');
+    },
+    onError: (error: any) => {
+      // Log error for debugging
+      console.error('Registration error:', error);
     },
   });
 };

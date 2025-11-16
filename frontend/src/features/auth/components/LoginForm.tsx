@@ -27,6 +27,11 @@ const LoginForm = () => {
     login(data);
   };
 
+  // Extract error message from various error formats
+  const errorMessage = error?.message || 
+    (error as any)?.response?.data?.message || 
+    'An error occurred during login';
+
   return (
     <Container variant="form" as="form" onSubmit={handleSubmit(onSubmit)}>
       <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
@@ -34,7 +39,8 @@ const LoginForm = () => {
       {/* API Error Message */}
       {error && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error.message}
+          <p className="font-semibold">Login Failed</p>
+          <p className="text-sm mt-1">{errorMessage}</p>
         </div>
       )}
 
