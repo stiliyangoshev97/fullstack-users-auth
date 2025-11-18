@@ -74,12 +74,18 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage', // localStorage key
-      // Only persist user and token, not isAuthenticated (derive it from token existence)
+      // Only persist user and token, isAuthenticated is derived from token existence
       partialize: (state) => ({
         user: state.user,
         token: state.token,
-        isAuthenticated: state.isAuthenticated,
       }),
+      // Derive isAuthenticated from token after rehydration
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          // Set isAuthenticated based on whether token exists
+          state.isAuthenticated = !!state.token;
+        }
+      },
     }
   )
 );
