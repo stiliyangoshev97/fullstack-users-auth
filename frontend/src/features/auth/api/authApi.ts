@@ -43,8 +43,8 @@ export const registerUser = async (userData: RegisterUserData): Promise<AuthResp
  * Verify JWT token
  */
 export const verifyToken = async (): Promise<TokenVerifyResponse> => {
-  const response = await apiClient.get<ApiResponse<TokenVerifyResponse>>(
-    '/api/auth/verify'
+  const response = await apiClient.post<ApiResponse<TokenVerifyResponse>>(
+    '/api/auth/verify-token'
   );
   return response.data.data;
 };
@@ -60,12 +60,12 @@ export const changePassword = async (data: ChangePasswordData): Promise<void> =>
  * Request password reset
  */
 export const requestPasswordReset = async (data: PasswordResetRequestData): Promise<void> => {
-  await apiClient.post('/api/auth/password-reset/request', data);
+  await apiClient.post('/api/auth/forgot-password', data);
 };
 
 /**
  * Reset password with token
  */
 export const resetPassword = async (data: PasswordResetData): Promise<void> => {
-  await apiClient.post('/api/auth/password-reset', data);
+  await apiClient.post('/api/auth/reset-password', data);
 };
