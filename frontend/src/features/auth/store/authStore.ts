@@ -18,7 +18,7 @@ interface AuthState {
   // Actions
   setAuth: (user: AuthUser, token: string) => void;
   logout: () => void;
-  updateUser: (user: Partial<AuthUser>) => void;
+  updateUser: (user: Partial<AuthUser>) => void; // Change only the fields that are updated
 }
 
 /**
