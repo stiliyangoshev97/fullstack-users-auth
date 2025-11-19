@@ -3,6 +3,24 @@
  * 
  * Form for updating user profile (name and age).
  * Uses React Hook Form + Zod for validation.
+ * 
+ * FLOW:
+ * 1. User sees form pre-filled with current name + age (defaultValues)
+ * 2. User changes name or age
+ * 3. On submit, Zod validates the data
+ * 4. If valid, calls PUT /api/users/:id with new data
+ * 5. On success:
+ *    - Updates user in Zustand store (authStore.updateUser)
+ *    - Shows success message
+ *    - Calls optional onSuccess callback (if provided by parent)
+ * 6. On error:
+ *    - Shows error message from backend
+ * 
+ * USED IN: ProfilePage.tsx (Profile Settings tab)
+ * 
+ * PROPS:
+ * - user: Current user data (used for defaultValues)
+ * - onSuccess: Optional callback after successful update
  */
 
 import { useForm } from 'react-hook-form';
@@ -13,28 +31,38 @@ import { Button, Input } from '../../../shared/components/ui';
 import type { IUser } from '../types/user.types';
 
 interface EditProfileFormProps {
-  user: IUser;
-  onSuccess?: () => void;
+  user: IUser;                    // Current user (for default values)
+  onSuccess?: () => void;         // Optional callback after update
 }
 
 const EditProfileForm = ({ user, onSuccess }: EditProfileFormProps) => {
+  // React Query mutation for updating profile
+  // mutate renamed to 'updateUser' for clarity
   const { mutate: updateUser, isPending, error, isSuccess } = useUpdateUser();
 
+  // React Hook Form setup
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
+    register,                     // Function to register inputs
+    handleSubmit,                 // Wraps onSubmit, validates first
+    formState: { errors },        // Validation errors from Zod
   } = useForm<UpdateUserFormData>({
-    resolver: zodResolver(updateUserSchema),
-    defaultValues: {
+    resolver: zodResolver(updateUserSchema), // Use Zod schema
+    defaultValues: {              // Pre-fill form with current values
       name: user.name,
       age: user.age,
     },
   });
 
+  /**
+   * Called when form submits and passes validation
+   * data = { name: "...", age: ... }
+   */
   const onSubmit = (data: UpdateUserFormData) => {
+    // Trigger update mutation (API call to PUT /api/users/:id)
+    // Second argument: mutation options (callbacks)
     updateUser(data, {
       onSuccess: () => {
+        // If parent provided onSuccess callback, call it
         if (onSuccess) onSuccess();
       },
     });

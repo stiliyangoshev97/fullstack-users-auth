@@ -1,7 +1,25 @@
 /**
- * User Card Component
+ * ===== USER CARD COMPONENT =====
  * 
  * Displays a single user's information in a card format.
+ * 
+ * Used in: UsersList.tsx, UsersPage.tsx
+ * 
+ * FEATURES:
+ * - Avatar with first letter of name
+ * - User name and email
+ * - Age badge
+ * - Join date and truncated user ID
+ * - Hover effect (shadow grows on hover)
+ * 
+ * DESIGN:
+ * - Card layout with rounded corners and shadow
+ * - Responsive spacing with Tailwind CSS
+ * - Blue color scheme for consistency
+ * - Truncated ID for privacy/readability
+ * 
+ * Props:
+ * @param user - User object with { id, name, email, age, createdAt }
  */
 
 import type { IUser } from '../types/user.types';
@@ -11,6 +29,10 @@ interface UserCardProps {
 }
 
 const UserCard = ({ user }: UserCardProps) => {
+  /**
+   * Format date to readable format
+   * Example: "Jan 15, 2024"
+   */
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { 

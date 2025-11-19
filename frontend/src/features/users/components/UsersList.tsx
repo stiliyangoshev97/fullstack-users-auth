@@ -1,7 +1,67 @@
 /**
- * Users List Component
+ * ===== USERS LIST COMPONENT =====
  * 
- * Displays a paginated grid of user cards with filtering options.
+ * Complete user management interface with pagination and filtering.
+ * 
+ * Used in: UsersPage.tsx
+ * 
+ * FEATURES:
+ * - Paginated user grid (9 users per page, 3x3 layout)
+ * - Age filter dropdown
+ * - Loading states (initial + pagination)
+ * - Error handling
+ * - Empty state
+ * - Auto-scroll to top on page change
+ * - Shows current page range (e.g., "Showing 1-9 of 45 users")
+ * 
+ * STATE MANAGEMENT:
+ * - page: Current page number (1-based)
+ * - ageFilter: Optional age filter
+ * - Data from useGetUsers React Query hook
+ * 
+ * REACT QUERY FEATURES USED:
+ * - isLoading: True only on first load
+ * - isFetching: True whenever fetching (including pagination)
+ * - data: Cached and automatically updated
+ * - error: API error handling
+ * - placeholderData: Shows old page while loading new one
+ * 
+ * PAGINATION FLOW:
+ * 1. User clicks page number
+ * 2. handlePageChange updates state
+ * 3. useGetUsers refetches with new page param
+ * 4. React Query shows old data while loading (smooth UX)
+ * 5. New data replaces old data
+ * 6. Page scrolls to top
+ * 
+ * FILTERING FLOW:
+ * 1. User selects age from dropdown
+ * 2. handleAgeFilterChange updates ageFilter
+ * 3. Reset to page 1 (filter might reduce total pages)
+ * 4. useGetUsers refetches with age param
+ * 5. Shows filtered results
+ * 
+ * API PARAMS SENT:
+ * - page: Current page (1-based)
+ * - limit: 9 users per page
+ * - age: Optional age filter
+ * - sortBy: 'createdAt' (newest users first)
+ * - sortOrder: 'desc'
+ * 
+ * LOADING STATES:
+ * - isLoading && !data: Initial load → show spinner
+ * - isFetching && data: Pagination → show "(Loading...)" text
+ * - This prevents flickering during pagination
+ * 
+ * GRID LAYOUT:
+ * - 1 column on mobile
+ * - 2 columns on tablet (md breakpoint)
+ * - 3 columns on desktop (lg breakpoint)
+ * 
+ * RELATED FILES:
+ * - UserCard.tsx: Individual user card component
+ * - Pagination.tsx: Pagination controls
+ * - api/userHooks.ts: useGetUsers hook
  */
 
 import { useState } from 'react';
@@ -11,10 +71,12 @@ import Pagination from './Pagination';
 import { Container } from '../../../shared/components/ui';
 
 const UsersList = () => {
+  // Local state for pagination and filtering
   const [page, setPage] = useState(1);
   const [ageFilter, setAgeFilter] = useState<number | undefined>(undefined);
   const limit = 9; // 9 cards per page (3x3 grid)
 
+  // React Query hook - automatically refetches when page/ageFilter changes
   const { data, isLoading, isFetching, error } = useGetUsers({
     page,
     limit,
@@ -23,11 +85,19 @@ const UsersList = () => {
     sortOrder: 'desc',
   });
 
+  /**
+   * Handle page navigation
+   * Scrolls to top for better UX
+   */
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  /**
+   * Handle age filter change
+   * Resets to page 1 since filter might reduce total pages
+   */
   const handleAgeFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     setAgeFilter(value ? parseInt(value) : undefined);

@@ -1,7 +1,36 @@
 /**
- * Pagination Component
+ * ===== PAGINATION COMPONENT =====
  * 
- * Displays pagination controls with page numbers and navigation.
+ * Smart pagination controls with page numbers and navigation.
+ * 
+ * Used in: UsersList.tsx, UsersPage.tsx
+ * 
+ * FEATURES:
+ * - Previous/Next buttons (auto-disabled at boundaries)
+ * - Page number buttons (highlights current page)
+ * - Smart ellipsis (...) for large page counts
+ * - Shows max 5 pages at once for clean UI
+ * 
+ * PAGINATION LOGIC:
+ * - Shows all pages if totalPages <= 5
+ * - Shows [1, 2, 3, 4, ..., 10] when near start
+ * - Shows [1, ..., 7, 8, 9, 10] when near end
+ * - Shows [1, ..., 4, 5, 6, ..., 10] when in middle
+ * 
+ * Props:
+ * @param pagination - { page, totalPages, hasNext, hasPrev, total, limit }
+ * @param onPageChange - Callback with page number (e.g., setPage(5))
+ * 
+ * EXAMPLE USAGE:
+ * ```tsx
+ * const [currentPage, setCurrentPage] = useState(1);
+ * const { data } = useGetUsers({ page: currentPage, limit: 10 });
+ * 
+ * <Pagination
+ *   pagination={data.pagination}
+ *   onPageChange={setCurrentPage}
+ * />
+ * ```
  */
 
 import { Button } from '../../../shared/components/ui';
@@ -15,30 +44,35 @@ interface PaginationProps {
 const Pagination = ({ pagination, onPageChange }: PaginationProps) => {
   const { page, totalPages, hasNext, hasPrev } = pagination;
 
-  // Generate page numbers to display
+  /**
+   * Generate page numbers with smart ellipsis
+   * 
+   * Returns array like: [1, 2, 3, '...', 10] or [1, '...', 5, 6, 7, '...', 10]
+   * This keeps the UI clean even with 100+ pages
+   */
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
     const maxVisible = 5; // Maximum number of page buttons to show
 
     if (totalPages <= maxVisible) {
-      // Show all pages if total is small
+      // Show all pages if total is small (e.g., [1, 2, 3, 4, 5])
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      // Show pages with ellipsis
+      // Show pages with ellipsis for better UX
       if (page <= 3) {
-        // Near the beginning
+        // Near the beginning: [1, 2, 3, 4, ..., 10]
         for (let i = 1; i <= 4; i++) pages.push(i);
         pages.push('...');
         pages.push(totalPages);
       } else if (page >= totalPages - 2) {
-        // Near the end
+        // Near the end: [1, ..., 7, 8, 9, 10]
         pages.push(1);
         pages.push('...');
         for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
       } else {
-        // In the middle
+        // In the middle: [1, ..., 4, 5, 6, ..., 10]
         pages.push(1);
         pages.push('...');
         pages.push(page - 1);

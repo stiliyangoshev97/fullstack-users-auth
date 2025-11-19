@@ -1,7 +1,54 @@
 /**
- * Profile Page
+ * ===== PROFILE PAGE =====
  * 
- * User profile page with edit profile and change password functionality.
+ * User profile management page with tabs for editing profile and changing password.
+ * Protected route - requires authentication.
+ * 
+ * Route: /profile
+ * Protection: ProtectedRoute wrapper in router/index.tsx
+ * 
+ * FEATURES:
+ * - Navigation bar with links to Dashboard, Users, Profile
+ * - User info card (avatar, name, email, join date)
+ * - Tab-based interface:
+ *   → Edit Profile: Update name, email, age
+ *   → Change Password: Update password with current password verification
+ * - Logout button in nav
+ * 
+ * STATE MANAGEMENT:
+ * - activeTab: Controls which form is displayed
+ * - user: From Zustand store (reactive to updates)
+ * 
+ * FORMS USED:
+ * - EditProfileForm: Updates user profile (name, email, age)
+ * - ChangePasswordForm: Changes password (requires current password)
+ * 
+ * DATA FLOW (Edit Profile):
+ * 1. User edits form in EditProfileForm component
+ * 2. Form submits → useUpdateUser mutation
+ * 3. API updates user in database
+ * 4. Zustand store updated (instant UI update)
+ * 5. React Query cache invalidated (consistency check)
+ * 6. User info card automatically reflects changes
+ * 
+ * DATA FLOW (Change Password):
+ * 1. User enters current + new password
+ * 2. Form submits → useChangePassword mutation
+ * 3. Backend verifies current password
+ * 4. Backend hashes and saves new password
+ * 5. Success message shown
+ * 6. User stays logged in (JWT still valid)
+ * 
+ * WHY TAB INTERFACE?
+ * - Cleaner UI than showing both forms at once
+ * - Separates concerns (profile vs security)
+ * - Common pattern users expect
+ * 
+ * RELATED FILES:
+ * - components/EditProfileForm.tsx: Profile editing form
+ * - components/ChangePasswordForm.tsx: Password change form
+ * - api/userHooks.ts: useUpdateUser mutation
+ * - auth/api/authHooks.ts: useChangePassword mutation
  */
 
 import { useState } from 'react';
@@ -12,10 +59,14 @@ import { Button, Container } from '../../../shared/components/ui';
 import { EditProfileForm, ChangePasswordForm } from '../components';
 
 const ProfilePage = () => {
+  // Get current user from Zustand (reactive to updates)
   const user = useAuthStore((state) => state.user);
   const logout = useLogout();
+  
+  // Tab state: 'profile' or 'password'
   const [activeTab, setActiveTab] = useState<'profile' | 'password'>('profile');
 
+  // Loading state (shouldn't happen as ProtectedRoute checks auth)
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">

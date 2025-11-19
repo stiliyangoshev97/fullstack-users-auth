@@ -1,7 +1,40 @@
 /**
- * Dashboard Page
+ * ===== DASHBOARD PAGE =====
  * 
- * Main dashboard page after login (protected route)
+ * Main landing page after successful login.
+ * Protected route - requires authentication.
+ * 
+ * Route: /dashboard
+ * Protection: ProtectedRoute wrapper in router/index.tsx
+ * 
+ * FEATURES:
+ * - Welcome message with user info
+ * - Logout button
+ * - Quick navigation cards to:
+ *   → /users - View all users list
+ *   → /profile - Edit profile & change password
+ * 
+ * DATA SOURCES:
+ * - User info from Zustand store (useAuthStore)
+ * - No API calls needed (data loaded at login)
+ * 
+ * UI LAYOUT:
+ * - Full-height page with gray background
+ * - Centered container with max-width
+ * - Grid layout for navigation cards (responsive)
+ * - Hover effects on cards for better UX
+ * 
+ * USER FLOW:
+ * 1. User logs in → redirect to /dashboard
+ * 2. See welcome message with their info
+ * 3. Click "View Users" → go to /users page
+ * 4. Click "Go to Profile" → go to /profile page
+ * 5. Click "Logout" → clear auth, redirect to /login
+ * 
+ * RELATED FILES:
+ * - router/ProtectedRoute.tsx: Authentication guard
+ * - features/auth/store/authStore.ts: User data source
+ * - features/auth/api/authHooks.ts: useLogout hook
  */
 
 import { Link } from 'react-router-dom';
@@ -10,7 +43,10 @@ import { useLogout } from '../../auth/api';
 import { Button, Container } from '../../../shared/components/ui';
 
 const DashboardPage = () => {
+  // Get current user from Zustand store
   const user = useAuthStore((state) => state.user);
+  
+  // Logout mutation (clears auth state and redirects)
   const logout = useLogout();
 
   return (

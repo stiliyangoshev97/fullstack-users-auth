@@ -1,7 +1,47 @@
 /**
- * Users Page
+ * ===== USERS PAGE =====
  * 
- * Page displaying all registered users with pagination and filtering.
+ * Displays list of all registered users with pagination.
+ * Protected route - requires authentication.
+ * 
+ * Route: /users
+ * Protection: ProtectedRoute wrapper in router/index.tsx
+ * 
+ * FEATURES:
+ * - Navigation bar with links to Dashboard, Users, Profile
+ * - UsersList component with all functionality:
+ *   → Search bar (filter by name/email)
+ *   → User cards grid
+ *   → Pagination controls
+ *   → Loading states
+ *   → Error handling
+ * - Logout button in nav
+ * 
+ * DELEGATION PATTERN:
+ * This page is a "container" that provides layout/navigation.
+ * All user list logic is in UsersList component for:
+ * - Better separation of concerns
+ * - Reusability (UsersList can be used elsewhere)
+ * - Easier testing
+ * - Cleaner code organization
+ * 
+ * DATA FETCHING:
+ * - Handled by UsersList component
+ * - Uses useGetUsers hook (React Query)
+ * - Automatic caching and background refetch
+ * - Pagination state managed in UsersList
+ * 
+ * NAVIGATION:
+ * - Dashboard: /dashboard
+ * - Users: /users (current, highlighted)
+ * - Profile: /profile
+ * - Logout: Clears auth, redirects to /login
+ * 
+ * RELATED FILES:
+ * - components/UsersList.tsx: Main list component
+ * - components/UserCard.tsx: Individual user card
+ * - components/Pagination.tsx: Pagination controls
+ * - api/userHooks.ts: useGetUsers hook
  */
 
 import { Link } from 'react-router-dom';
