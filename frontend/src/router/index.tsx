@@ -48,7 +48,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '*',
+    path: '*', // catches any URL that doesn't match above routes
     element: <Navigate to="/login" replace />,
   },
 ]);
