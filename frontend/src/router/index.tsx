@@ -13,7 +13,7 @@ import ProtectedRoute from './ProtectedRoute';
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/login" replace />,
+    element: <Navigate to="/login" replace />, // replace redirects to /login
   },
   {
     path: '/login',
