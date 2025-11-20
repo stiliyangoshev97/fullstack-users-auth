@@ -21,7 +21,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../../auth/store';
 import * as userApi from './userApi';
-import type { UpdateUserData, UserQueryParams } from '../types/user.types';
+import type { UserQueryParams } from '../types/user.types';
+import type { UpdateUserData } from '../schemas/user.schemas';
 
 /**
  * Get current user hook

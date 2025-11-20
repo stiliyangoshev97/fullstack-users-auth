@@ -1,32 +1,20 @@
 /**
- * User Types
+ * User API Response Types
  * 
- * Types for user-related data structures.
- * Matches backend's user.types.ts
+ * Types for API responses and query parameters that are NOT form data.
+ * Form data types are now inferred from Zod schemas in user.schemas.ts
+ * 
+ * REFACTORING NOTE:
+ * - Removed: IUser (replaced with shared/types/user.types.ts User)
+ * - Removed: UpdateUserData (now exported from user.schemas.ts as Zod-inferred type)
+ * - Kept: API response types (PaginatedUsersResponse, PaginationMeta, UserQueryParams)
  */
 
-/**
- * User interface - represents a user in the system
- */
-export interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  age: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-/**
- * User update data - fields that can be updated
- */
-export interface UpdateUserData {
-  name?: string;
-  age?: number;
-}
+import type { User } from '../../../shared/types';
 
 /**
  * Query parameters for filtering users
+ * Used in: UsersPage, userApi.getUsers
  */
 export interface UserQueryParams {
   page?: number;
@@ -39,6 +27,7 @@ export interface UserQueryParams {
 
 /**
  * Pagination metadata
+ * Used in: PaginatedUsersResponse, Pagination component
  */
 export interface PaginationMeta {
   page: number;
@@ -51,10 +40,11 @@ export interface PaginationMeta {
 
 /**
  * Paginated users response
+ * Returned by: userApi.getUsers
  */
 export interface PaginatedUsersResponse {
   success: boolean;
   message: string;
-  data: IUser[];
+  data: User[];
   pagination: PaginationMeta;
 }

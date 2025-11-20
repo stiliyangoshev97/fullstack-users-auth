@@ -24,5 +24,13 @@ export const updateUserSchema = z.object({
     .max(120, 'Age must be at most 120'),
 });
 
-// Export types inferred from schemas
-export type UpdateUserFormData = z.infer<typeof updateUserSchema>;
+// ===== EXPORTED TYPES (Zod-inferred - Single Source of Truth) =====
+
+/**
+ * User update data - fields that can be updated
+ * Used in: EditProfileForm, userApi.updateCurrentUser
+ */
+export type UpdateUserData = z.infer<typeof updateUserSchema>;
+
+// Legacy type name for backward compatibility (if needed during refactor)
+export type UpdateUserFormData = UpdateUserData;

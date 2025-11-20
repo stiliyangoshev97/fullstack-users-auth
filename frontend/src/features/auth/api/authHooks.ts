@@ -30,7 +30,7 @@ import type {
   ChangePasswordData,
   PasswordResetRequestData,
   PasswordResetData,
-} from '../types/auth.types';
+} from '../schemas/auth.schemas';
 
 /**
  * Login hook
