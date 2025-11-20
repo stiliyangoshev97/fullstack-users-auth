@@ -37,14 +37,16 @@
 
 import { apiClient } from '../../../shared/api';
 import type { 
+  AuthResponse,
+  TokenVerifyResponse,
+} from '../types/auth.types';
+import type { 
   LoginCredentials, 
   RegisterUserData, 
-  AuthResponse,
   ChangePasswordData,
   PasswordResetRequestData,
   PasswordResetData,
-  TokenVerifyResponse,
-} from '../types/auth.types';
+} from '../schemas/auth.schemas';
 import type { ApiResponse } from '../../../shared/types';
 
 /**

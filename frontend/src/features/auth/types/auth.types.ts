@@ -1,75 +1,32 @@
 /**
- * Authentication Types
+ * Authentication API Response Types
  * 
- * Types for authentication-related data structures.
- * Matches backend's auth.types.ts
+ * Types for API responses that are NOT form data.
+ * Form data types are now inferred from Zod schemas in auth.schemas.ts
+ * 
+ * REFACTORING NOTE:
+ * - Removed: RegisterUserData, LoginCredentials, ChangePasswordData, etc.
+ *   (Now exported from auth.schemas.ts as Zod-inferred types)
+ * - Removed: AuthUser (replaced with shared/types/user.types.ts User)
+ * - Kept: API response types (AuthResponse, TokenVerifyResponse)
  */
 
-/**
- * User registration data
- */
-export interface RegisterUserData {
-  name: string;
-  email: string;
-  password: string;
-  age: number;
-}
-
-/**
- * User login credentials
- */
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-/**
- * Password change data
- */
-export interface ChangePasswordData {
-  currentPassword: string;
-  newPassword: string;
-}
-
-/**
- * Password reset request data
- */
-export interface PasswordResetRequestData {
-  email: string;
-}
-
-/**
- * Password reset data with token
- */
-export interface PasswordResetData {
-  token: string;
-  newPassword: string;
-}
+import type { User } from '../../../shared/types';
 
 /**
  * Authentication response from login/register
+ * Returned by: authApi.loginUser, authApi.registerUser
  */
 export interface AuthResponse {
-  user: AuthUser;
+  user: User;
   token: string;
-}
-
-/**
- * Authenticated user data (without sensitive fields)
- */
-export interface AuthUser {
-  id: string;
-  name: string;
-  email: string;
-  age: number;
-  createdAt: string;
-  updatedAt: string;
 }
 
 /**
  * Token verification response
+ * Returned by: authApi.verifyToken
  */
 export interface TokenVerifyResponse {
   valid: boolean;
-  user?: AuthUser;
+  user?: User;
 }

@@ -24,21 +24,21 @@
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AuthUser } from '../types/auth.types';
+import type { User } from '../../../shared/types';
 
 /**
  * Auth state shape and actions
  */
 interface AuthState {
   // ===== STATE =====
-  user: AuthUser | null;        // Current logged-in user (null if not logged in)
+  user: User | null;            // Current logged-in user (null if not logged in)
   token: string | null;         // JWT token from backend (null if not logged in)
   isAuthenticated: boolean;     // Derived flag (true if token exists)
   
   // ===== ACTIONS =====
-  setAuth: (user: AuthUser, token: string) => void;  // Called after login/register
-  logout: () => void;                                 // Clear auth data
-  updateUser: (user: Partial<AuthUser>) => void;     // Update user fields (after profile edit)
+  setAuth: (user: User, token: string) => void;  // Called after login/register
+  logout: () => void;                             // Clear auth data
+  updateUser: (user: Partial<User>) => void;     // Update user fields (after profile edit)
 }
 
 /**
@@ -116,7 +116,7 @@ export const useAuthStore = create<AuthState>()(
        * - Merges new fields into existing user object
        * - Example: updateUser({ name: "New Name" }) keeps other fields unchanged
        * 
-       * Why Partial<AuthUser>?
+       * Why Partial<User>?
        * - Allows updating only some fields (name, age) without passing all fields
        * - TypeScript ensures only valid user fields can be updated
        */

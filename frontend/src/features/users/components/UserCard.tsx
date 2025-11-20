@@ -22,10 +22,10 @@
  * @param user - User object with { id, name, email, age, createdAt }
  */
 
-import type { IUser } from '../types/user.types';
+import type { User } from '../../../shared/types';
 
 interface UserCardProps {
-  user: IUser;
+  user: User;
 }
 
 const UserCard = ({ user }: UserCardProps) => {

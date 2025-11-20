@@ -28,10 +28,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useUpdateUser } from '../api';
 import { updateUserSchema, type UpdateUserFormData } from '../schemas';
 import { Button, Input } from '../../../shared/components/ui';
-import type { IUser } from '../types/user.types';
+import type { User } from '../../../shared/types';
 
 interface EditProfileFormProps {
-  user: IUser;                    // Current user (for default values)
+  user: User;                     // Current user (for default values)
   onSuccess?: () => void;         // Optional callback after update
 }
 

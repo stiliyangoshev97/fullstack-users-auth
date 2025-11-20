@@ -95,9 +95,43 @@ export const passwordResetSchema = z.object({
     .regex(/^\S+$/, 'Password cannot contain spaces'),
 });
 
-// Export types inferred from schemas
-export type RegisterFormData = z.infer<typeof registerSchema>;
-export type LoginFormData = z.infer<typeof loginSchema>;
-export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
-export type PasswordResetRequestFormData = z.infer<typeof passwordResetRequestSchema>;
-export type PasswordResetFormData = z.infer<typeof passwordResetSchema>;
+// ===== EXPORTED TYPES (Zod-inferred - Single Source of Truth) =====
+// These types are automatically derived from the Zod schemas above.
+// Use these throughout the app instead of duplicating manual interfaces.
+
+/**
+ * User registration data
+ * Used in: RegisterForm, authApi.registerUser
+ */
+export type RegisterUserData = z.infer<typeof registerSchema>;
+
+/**
+ * User login credentials
+ * Used in: LoginForm, authApi.loginUser
+ */
+export type LoginCredentials = z.infer<typeof loginSchema>;
+
+/**
+ * Password change data
+ * Used in: ChangePasswordForm, authApi.changePassword
+ */
+export type ChangePasswordData = z.infer<typeof changePasswordSchema>;
+
+/**
+ * Password reset request data
+ * Used in: Password reset request form, authApi.requestPasswordReset
+ */
+export type PasswordResetRequestData = z.infer<typeof passwordResetRequestSchema>;
+
+/**
+ * Password reset data with token
+ * Used in: Password reset form, authApi.resetPassword
+ */
+export type PasswordResetData = z.infer<typeof passwordResetSchema>;
+
+// Legacy type names for backward compatibility (if needed during refactor)
+export type RegisterFormData = RegisterUserData;
+export type LoginFormData = LoginCredentials;
+export type ChangePasswordFormData = ChangePasswordData;
+export type PasswordResetRequestFormData = PasswordResetRequestData;
+export type PasswordResetFormData = PasswordResetData;

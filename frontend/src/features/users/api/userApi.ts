@@ -6,14 +6,16 @@
  */
 
 import { apiClient } from '../../../shared/api';
-import type { IUser, UpdateUserData, UserQueryParams, PaginatedUsersResponse } from '../types/user.types';
+import type { User } from '../../../shared/types';
+import type { UserQueryParams, PaginatedUsersResponse } from '../types/user.types';
+import type { UpdateUserData } from '../schemas/user.schemas';
 import type { ApiResponse } from '../../../shared/types';
 
 /**
  * Get current user profile from auth
  */
-export const getCurrentUser = async (): Promise<IUser> => {
-  const response = await apiClient.get<ApiResponse<IUser>>('/api/auth/me');
+export const getCurrentUser = async (): Promise<User> => {
+  const response = await apiClient.get<ApiResponse<User>>('/api/auth/me');
   return response.data.data;
 };
 
@@ -41,8 +43,8 @@ export const getUsers = async (params: UserQueryParams = {}): Promise<PaginatedU
  * Update current user profile
  * Note: Backend requires user ID in URL, we get it from auth store
  */
-export const updateCurrentUser = async (userId: string, data: UpdateUserData): Promise<IUser> => {
-  const response = await apiClient.put<ApiResponse<IUser>>(`/api/users/${userId}`, data);
+export const updateCurrentUser = async (userId: string, data: UpdateUserData): Promise<User> => {
+  const response = await apiClient.put<ApiResponse<User>>(`/api/users/${userId}`, data);
   return response.data.data;
 };
 
