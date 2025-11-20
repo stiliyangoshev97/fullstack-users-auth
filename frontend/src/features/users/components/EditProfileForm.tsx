@@ -27,7 +27,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUpdateUser } from '../api';
 import { updateUserSchema, type UpdateUserFormData } from '../schemas';
-import { Button, Input } from '../../../shared/components/ui';
+import { Button, Input, Label, Alert, Text } from '../../../shared/components/ui';
 import type { User } from '../../../shared/types';
 
 interface EditProfileFormProps {
@@ -72,23 +72,22 @@ const EditProfileForm = ({ user, onSuccess }: EditProfileFormProps) => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Success Message */}
       {isSuccess && (
-        <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+        <Alert variant="success" className="mb-4">
           Profile updated successfully!
-        </div>
+        </Alert>
       )}
 
       {/* Error Message */}
       {error && (
-        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error.message}
-        </div>
+        <Alert variant="error" className="mb-4">
+          <Text className="font-semibold">Update Failed</Text>
+          <Text variant="small">{error.message}</Text>
+        </Alert>
       )}
 
       {/* Name Input */}
-      <div>
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-          Name
-        </label>
+      <div className="mb-4">
+        <Label htmlFor="name">Name</Label>
         <Input
           id="name"
           type="text"
@@ -100,10 +99,8 @@ const EditProfileForm = ({ user, onSuccess }: EditProfileFormProps) => {
       </div>
 
       {/* Age Input */}
-      <div>
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="age">
-          Age
-        </label>
+      <div className="mb-6">
+        <Label htmlFor="age">Age</Label>
         <Input
           id="age"
           type="number"
@@ -115,7 +112,11 @@ const EditProfileForm = ({ user, onSuccess }: EditProfileFormProps) => {
       </div>
 
       {/* Submit Button */}
-      <Button type="submit" variant="form" disabled={isPending}>
+      <Button
+        type="submit"
+        variant="form"
+        disabled={isPending}
+      >
         {isPending ? 'Updating...' : 'Update Profile'}
       </Button>
     </form>

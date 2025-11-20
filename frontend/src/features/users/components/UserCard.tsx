@@ -23,6 +23,7 @@
  */
 
 import type { User } from '../../../shared/types';
+import { Avatar, Heading, Text } from '../../../shared/components/ui';
 
 interface UserCardProps {
   user: User;
@@ -42,30 +43,32 @@ const UserCard = ({ user }: UserCardProps) => {
     });
   };
 
+  const joinDate = formatDate(user.createdAt);
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
-      {/* User Info */}
+      {/* Header with avatar and age badge */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
-          {/* Avatar */}
-          <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-            {user.name.charAt(0).toUpperCase()}
-          </div>
+          {/* Avatar with user initials */}
+          <Avatar name={user.name} size="md" />
+
+          {/* User name and email */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-800">{user.name}</h3>
-            <p className="text-sm text-gray-500">{user.email}</p>
+            <Heading variant="h3">{user.name}</Heading>
+            <Text variant="small">{user.email}</Text>
           </div>
         </div>
-        {/* Age Badge */}
+
+        {/* Age badge */}
         <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
           {user.age} years
         </div>
       </div>
 
-      {/* Metadata */}
+      {/* Footer with join date */}
       <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-200">
-        <span>Joined: {formatDate(user.createdAt)}</span>
-        <span>ID: {user.id.slice(0, 8)}...</span>
+        <span>Joined {joinDate}</span>
       </div>
     </div>
   );

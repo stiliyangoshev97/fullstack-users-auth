@@ -35,7 +35,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useChangePassword } from '../../auth/api';
 import { changePasswordSchema, type ChangePasswordFormData } from '../../auth/schemas';
-import { Button, Input } from '../../../shared/components/ui';
+import { Button, Input, Label, Alert, Text } from '../../../shared/components/ui';
 
 /**
  * Props for ChangePasswordForm
@@ -77,23 +77,22 @@ const ChangePasswordForm = ({ onSuccess }: ChangePasswordFormProps) => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       {/* Success Message */}
       {isSuccess && (
-        <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+        <Alert variant="success" className="mb-4">
           Password changed successfully!
-        </div>
+        </Alert>
       )}
 
       {/* Error Message */}
       {error && (
-        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error.message}
-        </div>
+        <Alert variant="error" className="mb-4">
+          <Text className="font-semibold">Password Change Failed</Text>
+          <Text variant="small">{error.message}</Text>
+        </Alert>
       )}
 
       {/* Current Password Input */}
-      <div>
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="currentPassword">
-          Current Password
-        </label>
+      <div className="mb-4">
+        <Label htmlFor="currentPassword">Current Password</Label>
         <Input
           id="currentPassword"
           type="password"
@@ -105,10 +104,8 @@ const ChangePasswordForm = ({ onSuccess }: ChangePasswordFormProps) => {
       </div>
 
       {/* New Password Input */}
-      <div>
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="newPassword">
-          New Password
-        </label>
+      <div className="mb-6">
+        <Label htmlFor="newPassword">New Password</Label>
         <Input
           id="newPassword"
           type="password"
@@ -120,7 +117,11 @@ const ChangePasswordForm = ({ onSuccess }: ChangePasswordFormProps) => {
       </div>
 
       {/* Submit Button */}
-      <Button type="submit" variant="form" disabled={isPending}>
+      <Button
+        type="submit"
+        variant="form"
+        disabled={isPending}
+      >
         {isPending ? 'Changing...' : 'Change Password'}
       </Button>
     </form>
