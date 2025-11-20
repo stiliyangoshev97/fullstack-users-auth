@@ -26,7 +26,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
 import { useLogin } from '../api';
 import { loginSchema, type LoginFormData } from '../schemas';
-import { Button, Input, Container } from '../../../shared/components/ui';
+import { Button, Input, Container, Label, Heading, Alert, Text } from '../../../shared/components/ui';
 
 const LoginForm = () => {
   // React Query mutation for login API call
@@ -57,33 +57,20 @@ const LoginForm = () => {
     'An error occurred during login';
 
   return (
-    // Container with form styling
-    // handleSubmit wraps onSubmit - validates with Zod before calling onSubmit
     <Container variant="form" as="form" onSubmit={handleSubmit(onSubmit)}>
-      <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+      <Heading variant="h2" className="text-center mb-6">Login</Heading>
 
       {/* API Error Message */}
-      {/* Shows if login fails (wrong password, server error, etc.) */}
       {error && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          <p className="font-semibold">Login Failed</p>
-          <p className="text-sm mt-1">{errorMessage}</p>
-        </div>
+        <Alert variant="error" className="mb-4">
+          <Text className="font-semibold">Login Failed</Text>
+          <Text variant="small" className="mt-1">{errorMessage}</Text>
+        </Alert>
       )}
 
       {/* Email Input */}
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-          Email
-        </label>
-        {/* 
-          {...register('email')} spreads:
-          - name="email"
-          - ref={...} (React Hook Form tracks this input)
-          - onChange/onBlur handlers for validation
-          
-          error={errors.email?.message} shows Zod validation error below input
-        */}
+        <Label htmlFor="email">Email</Label>
         <Input
           id="email"
           type="email"
@@ -96,13 +83,7 @@ const LoginForm = () => {
 
       {/* Password Input */}
       <div className="mb-6">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-          Password
-        </label>
-        {/* 
-          {...register('password')} wires this input to React Hook Form
-          Zod validates password is required and meets min length
-        */}
+        <Label htmlFor="password">Password</Label>
         <Input
           id="password"
           type="password"
@@ -114,10 +95,6 @@ const LoginForm = () => {
       </div>
 
       {/* Submit Button */}
-      {/* 
-        disabled while API call is in progress (isPending)
-        Shows "Logging in..." text while pending
-      */}
       <Button
         type="submit"
         variant="form"
@@ -127,13 +104,12 @@ const LoginForm = () => {
       </Button>
 
       {/* Register Link */}
-      {/* If user doesn't have account, navigate to /register */}
-      <p className="text-center mt-4 text-sm text-gray-600">
+      <Text variant="small" className="text-center mt-4">
         Don't have an account?{' '}
         <Link to="/register" className="text-blue-500 hover:text-blue-700 font-semibold">
           Register here
         </Link>
-      </p>
+      </Text>
     </Container>
   );
 };

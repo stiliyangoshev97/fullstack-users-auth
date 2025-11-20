@@ -40,7 +40,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'react-router-dom';
 import { useRegister } from '../api';
 import { registerSchema, type RegisterFormData } from '../schemas';
-import { Button, Input, Container } from '../../../shared/components/ui';
+import { Button, Input, Container, Label, Heading, Alert, Text } from '../../../shared/components/ui';
 
 const RegisterForm = () => {
   // React Query mutation for registration
@@ -74,21 +74,19 @@ const RegisterForm = () => {
 
   return (
     <Container variant="form" as="form" onSubmit={handleSubmit(onSubmit)}>
-      <h2 className="text-2xl font-bold text-center mb-6">Register</h2>
+      <Heading variant="h2" className="text-center mb-6">Register</Heading>
 
       {/* API Error Message */}
       {error && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          <p className="font-semibold">Registration Failed</p>
-          <p className="text-sm mt-1">{errorMessage}</p>
-        </div>
+        <Alert variant="error" className="mb-4">
+          <Text className="font-semibold">Registration Failed</Text>
+          <Text variant="small" className="mt-1">{errorMessage}</Text>
+        </Alert>
       )}
 
       {/* Name Input */}
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-          Name
-        </label>
+        <Label htmlFor="name">Name</Label>
         <Input
           id="name"
           type="text"
@@ -101,9 +99,7 @@ const RegisterForm = () => {
 
       {/* Email Input */}
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-          Email
-        </label>
+        <Label htmlFor="email">Email</Label>
         <Input
           id="email"
           type="email"
@@ -116,9 +112,7 @@ const RegisterForm = () => {
 
       {/* Password Input */}
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-          Password
-        </label>
+        <Label htmlFor="password">Password</Label>
         <Input
           id="password"
           type="password"
@@ -131,9 +125,7 @@ const RegisterForm = () => {
 
       {/* Age Input */}
       <div className="mb-6">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="age">
-          Age
-        </label>
+        <Label htmlFor="age">Age</Label>
         <Input
           id="age"
           type="number"
@@ -150,16 +142,16 @@ const RegisterForm = () => {
         variant="form"
         disabled={isPending}
       >
-        {isPending ? 'Creating account...' : 'Register'}
+        {isPending ? 'Registering...' : 'Register'}
       </Button>
 
       {/* Login Link */}
-      <p className="text-center mt-4 text-sm text-gray-600">
+      <Text variant="small" className="text-center mt-4">
         Already have an account?{' '}
         <Link to="/login" className="text-blue-500 hover:text-blue-700 font-semibold">
           Login here
         </Link>
-      </p>
+      </Text>
     </Container>
   );
 };

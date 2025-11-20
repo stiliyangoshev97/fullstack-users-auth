@@ -68,7 +68,7 @@ import { useState } from 'react';
 import { useGetUsers } from '../api';
 import UserCard from './UserCard';
 import Pagination from './Pagination';
-import { Container } from '../../../shared/components/ui';
+import { Container, Heading, Text, Label, Alert, SelectInput } from '../../../shared/components/ui';
 
 const UsersList = () => {
   // Local state for pagination and filtering
@@ -111,7 +111,7 @@ const UsersList = () => {
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading users...</p>
+            <Text variant="muted" className="mt-4">Loading users...</Text>
           </div>
         </div>
       </Container>
@@ -121,10 +121,10 @@ const UsersList = () => {
   if (error) {
     return (
       <Container variant="default">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          <p className="font-semibold">Error loading users</p>
-          <p className="text-sm mt-1">{(error as any)?.message || 'Failed to fetch users'}</p>
-        </div>
+        <Alert variant="error">
+          <Text className="font-semibold">Error loading users</Text>
+          <Text variant="small" className="mt-1">{(error as any)?.message || 'Failed to fetch users'}</Text>
+        </Alert>
       </Container>
     );
   }
@@ -133,7 +133,7 @@ const UsersList = () => {
     return (
       <Container variant="default">
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">No users found</p>
+          <Text variant="lead" className="text-gray-500">No users found</Text>
           {ageFilter && (
             <button
               onClick={() => setAgeFilter(undefined)}
@@ -152,25 +152,22 @@ const UsersList = () => {
       {/* Header with Filter */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">
-            All Users {isFetching && <span className="text-sm text-gray-500">(Loading...)</span>}
-          </h2>
-          <p className="text-sm text-gray-600 mt-1">
+          <Heading variant="h2">
+            All Users {isFetching && <Text as="span" variant="small" className="text-gray-500">(Loading...)</Text>}
+          </Heading>
+          <Text variant="small" className="mt-1">
             Showing {(page - 1) * limit + 1} - {Math.min(page * limit, data.pagination.total)} of{' '}
             {data.pagination.total} users
-          </p>
+          </Text>
         </div>
 
         {/* Age Filter */}
         <div className="flex items-center space-x-3">
-          <label htmlFor="ageFilter" className="text-sm font-medium text-gray-700">
-            Filter by age:
-          </label>
-          <select
+          <Label htmlFor="ageFilter" variant="small">Filter by age:</Label>
+          <SelectInput
             id="ageFilter"
             value={ageFilter || ''}
             onChange={handleAgeFilterChange}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">All ages</option>
             <option value="18">18 years</option>
@@ -180,7 +177,7 @@ const UsersList = () => {
             <option value="35">35 years</option>
             <option value="40">40 years</option>
             <option value="50">50+ years</option>
-          </select>
+          </SelectInput>
         </div>
       </div>
 
