@@ -50,9 +50,20 @@ src/
 ├── shared/            # Shared resources
 │   ├── api/          # Axios client with interceptors
 │   ├── components/   # Reusable UI components
-│   │   └── ui/       # Button, Input, Container
+│   │   └── ui/       # 11 variant-based components:
+│   │       ├── Button.tsx      # Button variants
+│   │       ├── Input.tsx       # Form inputs
+│   │       ├── Container.tsx   # Layout containers
+│   │       ├── Label.tsx       # Form labels
+│   │       ├── Heading.tsx     # Semantic headings
+│   │       ├── Text.tsx        # Typography
+│   │       ├── Alert.tsx       # Feedback messages
+│   │       ├── NavLink.tsx     # Navigation links
+│   │       ├── Avatar.tsx      # User avatars
+│   │       ├── SelectInput.tsx # Styled dropdowns
+│   │       └── index.ts        # Exports
 │   ├── config/       # Configuration files
-│   └── types/        # Shared TypeScript types
+│   └── types/        # Shared TypeScript types (unified User type)
 ├── router/           # React Router configuration
 │   ├── index.tsx     # Route definitions
 │   └── ProtectedRoute.tsx # Auth guard
@@ -106,9 +117,24 @@ npm run preview
 ## 🎨 Key Features
 
 ### State Management
-- **Zustand** for global auth state (user, token, isAuthenticated)
-- **React Query** for server state and API caching
-- **React Hook Form** for form state
+
+**Zustand** for global auth state:
+- Stores `user`, `token`, and `isAuthenticated`
+- Only `user` and `token` persisted to localStorage
+- `isAuthenticated` is **derived** from token existence on rehydration
+- Uses `onRehydrateStorage` hook to set `isAuthenticated = !!token`
+- Single source of truth: token determines authentication status
+
+**React Query** for server state:
+- All API calls and data fetching
+- Automatic caching and background refetching
+- Loading and error state management
+- Optimistic updates
+
+**React Hook Form** for form state:
+- Type-safe forms with Zod validation
+- Real-time error messages
+- Optimized re-renders
 
 ### Authentication Flow
 1. User logs in → JWT token received
@@ -117,17 +143,26 @@ npm run preview
 4. Protected routes check authentication status
 5. Expired/invalid token → Auto-logout and redirect
 
-### UI Components
+### UI Component System
 
-All components use **variant-based styling** for consistency:
+All components use **variant-based styling** for consistency across the app. The system includes **11 reusable components**:
 
+#### Core Layout Components
 ```tsx
-// Button variants
+// Buttons with variants
 <Button variant="primary" />   // Blue button
 <Button variant="secondary" /> // Gray button
 <Button variant="danger" />    // Red button
 <Button variant="form" />      // Full-width green button
 
+// Containers with variants
+<Container variant="default" /> // Basic container
+<Container variant="form" />    // Form container with styling
+<Container variant="card" />    // Card with shadow
+```
+
+#### Form Components
+```tsx
 // Input with error handling
 <Input 
   variant="form"
@@ -135,11 +170,55 @@ All components use **variant-based styling** for consistency:
   {...register('email')}
 />
 
-// Container variants
-<Container variant="default" /> // Basic container
-<Container variant="form" />    // Form container with styling
-<Container variant="card" />    // Card with shadow
+// Labels with variants
+<Label variant="default">Required Field</Label>
+<Label variant="small">Optional info</Label>
+
+// Styled select/dropdown
+<SelectInput variant="form">
+  <option value="">Choose...</option>
+  <option value="1">Option 1</option>
+</SelectInput>
 ```
+
+#### Typography Components
+```tsx
+// Semantic headings (h1-h6)
+<Heading variant="h1">Page Title</Heading>
+<Heading variant="h2">Section Title</Heading>
+
+// Text paragraphs with variants
+<Text variant="body">Standard text</Text>
+<Text variant="muted">Secondary text</Text>
+<Text variant="lead">Emphasized text</Text>
+<Text variant="small">Small print</Text>
+```
+
+#### Feedback & Navigation Components
+```tsx
+// Alert messages
+<Alert variant="success">Success message!</Alert>
+<Alert variant="error">Error occurred</Alert>
+<Alert variant="info">Information</Alert>
+
+// Navigation links with active state
+<NavLink to="/dashboard" active={isActive}>
+  Dashboard
+</NavLink>
+
+// User avatars with initials
+<Avatar name="John Doe" size="sm" />
+<Avatar name="Jane Smith" size="md" />
+<Avatar name="Bob Wilson" size="lg" />
+```
+
+**Component Benefits:**
+- ✅ **Consistency** - Same styling across the entire app
+- ✅ **Maintainability** - Update design in one place
+- ✅ **DRY Principle** - No repetitive Tailwind classes
+- ✅ **Type Safety** - Full TypeScript support
+- ✅ **Accessibility** - Semantic HTML preserved
+- ✅ **Developer Experience** - Clean, readable JSX
 
 ### Form Validation
 
@@ -195,85 +274,94 @@ npx tailwindcss init -p
 14. **`src/shared/api/index.ts`** - API exports
 
 ### **Phase 3: Shared UI Components**
-*Reusable components used across features*
+*Reusable variant-based components used across features (11 components total)*
 
-15. **`src/shared/components/ui/Button.tsx`** - Button component with variants
+15. **`src/shared/components/ui/Button.tsx`** - Button component with variants (primary, secondary, danger, form)
 16. **`src/shared/components/ui/Input.tsx`** - Input component with error handling
-17. **`src/shared/components/ui/Container.tsx`** - Container component with variants
-18. **`src/shared/components/ui/index.ts`** - UI component exports
+17. **`src/shared/components/ui/Container.tsx`** - Container component with variants (default, form, card)
+18. **`src/shared/components/ui/Label.tsx`** - Form labels (default, small)
+19. **`src/shared/components/ui/Heading.tsx`** - Semantic h1-h6 headings
+20. **`src/shared/components/ui/Text.tsx`** - Typography (body, small, muted, lead)
+21. **`src/shared/components/ui/Alert.tsx`** - Feedback messages (success, error, info)
+22. **`src/shared/components/ui/NavLink.tsx`** - Navigation links with active states
+23. **`src/shared/components/ui/Avatar.tsx`** - User initials in circles (sm, md, lg)
+24. **`src/shared/components/ui/SelectInput.tsx`** - Styled native dropdowns
+25. **`src/shared/components/ui/Select.tsx`** - Alternative select component (if needed)
+26. **`src/shared/components/ui/index.ts`** - UI component exports
 
 ### **Phase 4: Providers Setup**
 *Configure application-wide providers*
 
-19. **`src/providers/QueryProvider.tsx`** - TanStack Query provider with configuration
-20. **`src/providers/index.ts`** - Provider exports
+27. **`src/providers/QueryProvider.tsx`** - TanStack Query provider with configuration
+28. **`src/providers/index.ts`** - Provider exports
 
 ### **Phase 5: Authentication Feature (Complete)**
 *Build auth system as foundation for protected routes*
 
 **Types & Schemas:**
-21. **`src/features/auth/types/auth.types.ts`** - Auth TypeScript interfaces
-22. **`src/features/auth/schemas/auth.schemas.ts`** - Zod validation schemas for login/register
-23. **`src/features/auth/schemas/index.ts`** - Schema exports
+29. **`src/features/auth/types/auth.types.ts`** - Auth TypeScript types (Zod-inferred)
+30. **`src/features/auth/schemas/auth.schemas.ts`** - Zod validation schemas for login/register
+31. **`src/features/auth/schemas/index.ts`** - Schema exports
 
 **State Management:**
-24. **`src/features/auth/store/authStore.ts`** - Zustand store with persist middleware
-25. **`src/features/auth/store/index.ts`** - Store exports
+32. **`src/features/auth/store/authStore.ts`** - Zustand store with persist middleware & derived state
+33. **`src/features/auth/store/index.ts`** - Store exports
 
 **API Layer:**
-26. **`src/features/auth/api/authApi.ts`** - Auth API functions (login, register, logout)
-27. **`src/features/auth/api/authHooks.ts`** - React Query hooks (useLogin, useRegister)
-28. **`src/features/auth/api/index.ts`** - API exports
+34. **`src/features/auth/api/authApi.ts`** - Auth API functions (login, register, logout)
+35. **`src/features/auth/api/authHooks.ts`** - React Query hooks (useLogin, useRegister)
+36. **`src/features/auth/api/index.ts`** - API exports
 
 **Components:**
-29. **`src/features/auth/components/LoginForm.tsx`** - Login form with React Hook Form
-30. **`src/features/auth/components/RegisterForm.tsx`** - Register form with React Hook Form
-31. **`src/features/auth/components/index.ts`** - Component exports
+37. **`src/features/auth/components/LoginForm.tsx`** - Login form with React Hook Form
+38. **`src/features/auth/components/RegisterForm.tsx`** - Register form with React Hook Form
+39. **`src/features/auth/components/index.ts`** - Component exports
 
 **Pages:**
-32. **`src/features/auth/pages/LoginPage.tsx`** - Login page layout
-33. **`src/features/auth/pages/RegisterPage.tsx`** - Register page layout
-34. **`src/features/auth/pages/index.ts`** - Page exports
+40. **`src/features/auth/pages/LoginPage.tsx`** - Login page layout
+41. **`src/features/auth/pages/RegisterPage.tsx`** - Register page layout
+42. **`src/features/auth/pages/index.ts`** - Page exports
 
 ### **Phase 6: Router Setup**
 *Configure routing after auth is ready*
 
-35. **`src/router/ProtectedRoute.tsx`** - Route guard for authenticated routes
-36. **`src/router/index.tsx`** - React Router configuration with all routes
+43. **`src/router/ProtectedRoute.tsx`** - Route guard for authenticated routes
+44. **`src/router/index.tsx`** - React Router configuration with all routes
 
 ### **Phase 7: Users Feature (Complete)**
 *Build user management after auth is working*
 
 **Types & Schemas:**
-37. **`src/features/users/types/user.types.ts`** - User TypeScript interfaces
-38. **`src/features/users/schemas/user.schemas.ts`** - Zod validation schemas
-39. **`src/features/users/schemas/index.ts`** - Schema exports
+45. **`src/shared/types/user.types.ts`** - **Unified User type** (shared across features)
+46. **`src/features/users/types/user.types.ts`** - Feature-specific user types
+47. **`src/features/users/schemas/user.schemas.ts`** - Zod validation schemas
+48. **`src/features/users/schemas/index.ts`** - Schema exports
 
 **API Layer:**
-40. **`src/features/users/api/userApi.ts`** - User API functions
-41. **`src/features/users/api/userHooks.ts`** - React Query hooks (useCurrentUser, useUpdateUser, etc.)
-42. **`src/features/users/api/index.ts`** - API exports
+49. **`src/features/users/api/userApi.ts`** - User API functions
+50. **`src/features/users/api/userHooks.ts`** - React Query hooks (useCurrentUser, useUpdateUser, useUsers, etc.)
+51. **`src/features/users/api/index.ts`** - API exports
 
 **Components:**
-43. **`src/features/users/components/EditProfileForm.tsx`** - Profile edit form
-44. **`src/features/users/components/ChangePasswordForm.tsx`** - Password change form
-45. **`src/features/users/components/UserCard.tsx`** - User display card
-46. **`src/features/users/components/UsersList.tsx`** - Users list component
-47. **`src/features/users/components/Pagination.tsx`** - Pagination component
-48. **`src/features/users/components/index.ts`** - Component exports
+52. **`src/features/users/components/EditProfileForm.tsx`** - Profile edit form
+53. **`src/features/users/components/ChangePasswordForm.tsx`** - Password change form
+54. **`src/features/users/components/UserCard.tsx`** - User display card with Avatar
+55. **`src/features/users/components/UsersList.tsx`** - Users list grid component
+56. **`src/features/users/components/Pagination.tsx`** - Pagination controls
+57. **`src/features/users/components/index.ts`** - Component exports
 
 **Pages:**
-49. **`src/features/users/pages/DashboardPage.tsx`** - Dashboard page
-50. **`src/features/users/pages/ProfilePage.tsx`** - User profile page
-51. **`src/features/users/pages/UsersPage.tsx`** - Users list page (admin)
-52. **`src/features/users/pages/index.ts`** - Page exports
+58. **`src/features/users/pages/DashboardPage.tsx`** - Dashboard landing page
+59. **`src/features/users/pages/ProfilePage.tsx`** - User profile page with tabs
+60. **`src/features/users/pages/UsersPage.tsx`** - Paginated users list with filtering
+61. **`src/features/users/pages/index.ts`** - Page exports
 
 ### **Phase 8: Main Application**
 *Wire everything together*
 
-53. **`src/App.tsx`** - Main app component with RouterProvider
-54. **`src/main.tsx`** - Application entry point with providers
-55. **`index.html`** - HTML template
+62. **`src/App.tsx`** - Main app component with RouterProvider
+63. **`src/main.tsx`** - Application entry point with providers
+64. **`index.html`** - HTML template
 
 ### 📋 Development Tips
 
@@ -305,9 +393,41 @@ Each feature is self-contained with:
 - `api/` - API calls and React Query hooks
 - `components/` - Feature-specific components
 - `pages/` - Page components
-- `schemas/` - Zod validation schemas
-- `store/` - Zustand stores (if needed)
-- `types/` - TypeScript interfaces
+- `schemas/` - Zod validation schemas (single source of truth for types)
+- `store/` - Zustand stores (if needed, e.g., auth store)
+- `types/` - TypeScript types (Zod-inferred, not manually defined)
+
+### Key Architectural Decisions
+
+**Derived State Pattern (isAuthenticated)**
+The `isAuthenticated` flag is derived from token existence rather than persisted separately:
+
+```typescript
+// In authStore.ts
+partialize: (state) => ({
+  user: state.user,
+  token: state.token,
+  // isAuthenticated is NOT persisted
+}),
+onRehydrateStorage: () => (state) => {
+  if (state) {
+    state.isAuthenticated = !!state.token; // Derived from token
+  }
+}
+```
+
+**Benefits:**
+- ✅ Single source of truth: token is the only persisted auth indicator
+- ✅ No state inconsistency: `isAuthenticated` always matches token presence
+- ✅ More resilient to manual localStorage changes or token expiration
+- ✅ Prevents edge cases where token and isAuthenticated get out of sync
+
+**Zod as Single Source of Truth**
+All types are inferred from Zod schemas using `z.infer<typeof schema>`:
+- ✅ No duplicate type definitions
+- ✅ Validation and types stay in sync automatically
+- ✅ Easier to maintain and update
+- ✅ Type safety guaranteed by Zod schemas
 
 ## 🔧 Available Scripts
 
@@ -357,6 +477,49 @@ Built mobile-first with Tailwind CSS:
 - All components are responsive
 - Breakpoints: `sm`, `md`, `lg`, `xl`, `2xl`
 - Touch-friendly button sizes
+- Grid layouts for user lists (3x3 on desktop, responsive on mobile)
+
+## 🔄 Recent Updates
+
+### v1.2.0 - UI Component System (November 2025)
+**Major refactoring** to establish a variant-based UI component system:
+
+**New Components Created:**
+- `Label` - Form labels (default, small)
+- `Heading` - Semantic h1-h6 headings
+- `Text` - Typography (body, small, muted, lead)
+- `Alert` - Feedback messages (success, error, info)
+- `NavLink` - Navigation with active states
+- `Avatar` - User initials (sm, md, lg)
+- `SelectInput` - Styled native dropdowns
+
+**Files Refactored (9 files):**
+- Forms: `LoginForm`, `RegisterForm`, `ChangePasswordForm`, `EditProfileForm`
+- Pages: `ProfilePage`, `DashboardPage`, `UsersPage`
+- Components: `UserCard`, `UsersList`
+
+**Impact:**
+- ✅ Eliminated ~200+ lines of repetitive Tailwind classes
+- ✅ Consistent design system across entire app
+- ✅ Easier maintenance (change once, updates everywhere)
+- ✅ Cleaner JSX and better developer experience
+- ✅ All components fully type-safe with TypeScript
+
+### v1.1.0 - Type System Consolidation (November 2025)
+**Type system refactoring** to eliminate duplicates and establish Zod as single source of truth:
+
+**Changes Made:**
+- ✅ Created unified `User` type in `shared/types/user.types.ts`
+- ✅ Consolidated `IUser` and `AuthUser` into single `User` type
+- ✅ Refactored auth schemas to export Zod-inferred types
+- ✅ Removed ~150 lines of duplicate type definitions
+- ✅ Updated 15+ import statements across 10 files
+
+**Benefits:**
+- Single source of truth for types
+- No manual interface maintenance
+- Validation and types stay in sync automatically
+- Easier to add new fields
 
 ## ESLint Configuration
 
